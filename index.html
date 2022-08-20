@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <section class="card" id="card">
+
+            <div class="front">
+                <div class="brand-logo" id="brand-logo">
+
+                </div>
+                <img src="images/chip-tarjeta.png" class="chip">
+
+                <div class="data">
+
+                    <div class="group" id="number">
+                        <p class="label">number</p>
+                        <p class="number">#### #### #### ####</p>
+                    </div>    
+
+                    <div class="flex">
+
+                        <div class="group" id="name">
+                            <p class="label">Name</p>
+                            <p class="fullname">AhmedFoad</p>
+                        </div>
+
+                        <div class="group" id="expiration">
+                            <p class="label">Expiracion</p>
+                            <p class="expiration"><span class="month">MM</span> / <span class="year">AA</span> </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="back">
+
+                <div class="magnetic-bar"></div>
+                <div class="data">
+                    <div class="group" id="signature">
+                        <p class="label">sign</p>
+                        <div class="signature"><p></p></div>
+                    </div>
+                    <div class="group" id="ccv">
+                        <P class="label">CCV</P>
+                        <P class="ccv"></P>
+                    </div>
+                </div>
+                <div class="legend"><p>هذه البطاقة شخصية وغير قابلة للتحويل ، في حالة فقدانها ، اتصل بالمصرف الذي تتعامل معه على الفور</p></div>
+                <a href="#" class="bank">www.visa.com</a>
+            </div>
+
+        </section>
+
+        <div class="btn-container">
+
+            <button class="btn-open" id="btn-open">
+                <img src="images/btn.png">
+            </button>
+
+        </div>
+
+        <form action="" class="card-form" id="card-form">
+            <div class="group">
+                <label for="inputNumber">رقم البطاقة</label>
+                <input type="text" id="inputNumber" maxlength="19" autocomplete="off">
+            </div>
+
+            <div class="group">
+                <label for="inputName">الأسم بالكامل</label>
+                <input type="text" id="inputName" maxlength="19" autocomplete="off">
+            </div>
+
+            <div class="flex">
+
+                <div class="group expire">
+
+                    <label for="selectMonth">انتهاء الصلاحية</label>
+                    <div class="flex">
+
+                        <div class="group-select">
+                            <select name="month" id="selectMonth">
+                                <option disabled selected>شهر</option>
+                            </select>
+                        </div>
+
+                        <div class="group-select">
+                            <select name="year" id="selectYear">
+                                <option disabled selected>عام</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="grupo cvv">
+                    <label for="inputCvv">Cvv</label>
+                    <input type="text"  id="inputCvv" maxlength="3">
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn-send">حفظ</button>
+        </form>
+
+
+    </div>
+
+<script src="index.js"></script>
+</body>
+</html> 
+ 158  
+js/index.js
+@@ -0,0 +1,158 @@
+const card = document.querySelector('#card');
+const btnOpen = document.querySelector('#btn-open');
+const form = document.querySelector('#card-form');
+const cardNumber = document.querySelector('#card .number');
+const cardName = document.querySelector('#card .fullname');
+const brandLogo = document.querySelector('#brand-logo');
+const signature = document.querySelector('#card .signature p');
+const monthExpire = document.querySelector('#card .month');
+const yearExpire = document.querySelector('#card .year');
+const ccv = document.querySelector('#card .ccv')
+
+
+const showFront = () => {
+    if(card.classList.contains('active')){
+        card.classList.remove('active')
+    }
+};
+
+
+card.addEventListener('click', () => {
+    card.classList.toggle('active');
+})
+
+
+btnOpen.addEventListener('click', () => {
+    btnOpen.classList.toggle('active');
+    form.classList.toggle('active');
+})
+
+
+for(let i = 1; i <= 12; i++){
+    let option = document.createElement('option');
+    option.value = i;
+    option.innerText = i;
+
+    form.selectMonth.appendChild(option);
+};
+
+
+for(let i = 2022; i <= 2030; i++){
+    let option = document.createElement('option');
+    option.value = i;
+    option.innerText = i;
+
+    form.selectYear.appendChild(option);
+};
+
+
+
+
+form.inputNumber.addEventListener('keyup', (e) => {
+
+    let valueInput = e.target.value;
+
+
+    form.inputNumber.value = valueInput
+
+    .trim();
+
+    cardNumber.textContent = valueInput;
+
+    if(valueInput == ''){
+        cardNumber.textContent = 'XXXX XXXX XXXX XXXX';
+
+        brandLogo.innerHTML = '';
+    }
+
+    
+    if(valueInput[0] == 4){
+        brandLogo.innerHTML = '';
+        const imagen = document.createElement('img');
+        imagen.src = 'img/logos/visa.png';
+        brandLogo.appendChild(imagen);
+    }
+
+    
+    if(valueInput[0] == 5){
+        brandLogo.innerHTML = '';
+        const imagen = document.createElement('img');
+        imagen.src = 'img/logos/mastercard.png';
+        brandLogo.appendChild(imagen);
+    }
+
+
+    
+    showFront();
+});
+
+
+form.inputName.addEventListener('keyup', (e) => {
+
+    let valueInput = e.target.value;
+
+    form.inputName.value = valueInput
+    
+    .replace(/[0-9]/g, '')
+
+    cardName.textContent = valueInput;
+
+    if(valueInput == ''){
+        cardName.textContent = 'Crow Jones';
+
+    }
+
+    signature.textContent = valueInput;
+
+    
+    showFront();
+
+});
+
+form.selectMonth.addEventListener('change', (e) => {
+
+    let valueInput = e.target.value;
+
+    monthExpire.textContent = valueInput;
+
+
+    showFront();
+});
+
+
+form.selectYear.addEventListener('change', (e) => {
+
+    let valueInput = e.target.value.slice(2);
+
+    yearExpire.textContent = valueInput;
+
+    
+    showFront();
+});
+
+
+
+form.inputCvv.addEventListener('keyup', () => {
+
+    if(!card.classList.contains('active')){
+        card.classList.toggle('active');
+    }
+
+    form.inputCvv.value = form.inputCvv.value
+    
+    .replace(/\s/g, '')
+    
+    .replace(/\D/g, '');
+
+    ccv.textContent = form.inputCvv.value;
+});
